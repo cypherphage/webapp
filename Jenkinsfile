@@ -12,7 +12,15 @@ pipeline {
           echo "hello"
         '''
       }
-    }    
+    }
+    
+    stage ('Check-git-secrets') {
+      steps {
+        sh 'rm trufflehog || true'
+        sh 'docker run dxa4481/trufflehog --json https://github.com/cypherphage/webapp.git > trufflehog'
+        sh 'cat trufflehog'
+      }
+    }
     stage ('Build') {
       steps {
         sh 'mvn clean package'
